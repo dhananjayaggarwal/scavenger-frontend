@@ -30,6 +30,10 @@ const NAME = "name";
     });
     const [pendingNotification, setPendingNotification] = useState([]);
 
+    const [branchDetails, setBranchDetails] = useState([]);
+
+    const [isBranchDataExist, setIsBranchDataExist] = useState(false);
+
     /*
     useEffect(()=>{
         //one time operation, gene
@@ -42,7 +46,7 @@ const NAME = "name";
                 const authenticationToken = localStorage.getItem('token');
                 if(authenticationToken){
                     let config = { headers: {'Authorization': 'Bearer ' + authenticationToken}};
-                    const res = await axios.get('http://127.0.0.1:3001/api/user/pendingNotifications', config)
+                    const res = await axios.get(process.env.REACT_APP_API_URL+'/api/user/pendingNotifications', config)
                     console.log("yaha agye hai hum", res);
                     if(res && res.data && res.data.success){
                         console.log(res.data.pendingNotifications);
@@ -106,7 +110,7 @@ const NAME = "name";
                 break;
             case PINCODE:
                 setPincode({
-                    ...name,
+                    ...pincode,
                     error: validatePincode(pincode.value),
                 });
                 break;
@@ -114,7 +118,8 @@ const NAME = "name";
             // error_modal("wrong input");
         }
     };
-    const submitContactForm = (e) => {
+    const submitContactForm = async (e) => {
+        console.log("entered submitContactForm", validateAllFields())
         e.preventDefault();
         if (validateAllFields()) {
             let data = {
@@ -124,7 +129,21 @@ const NAME = "name";
                 pincode: pincode.value,
 
             };
+            console.log("inside submitContactForm")
             //TODO call api
+            const res = await axios.post(process.env.REACT_APP_API_URL+"/api/details/customerForm", data)
+            if(res.data.message){
+                setBranchDetails(res.data.data)
+                if(res.data.data.length > 0) {
+                    setIsBranchDataExist(true);
+                }else{
+                    setIsBranchDataExist(false);
+                    alert("No donuts for you");
+                }
+              } else{
+                setIsBranchDataExist(false);
+                alert("No donuts");
+              }
             // history.push("/");
         }
     };
@@ -191,6 +210,17 @@ const NAME = "name";
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="row mt-2">
+                {branchDetails.map((branch, index)=><div key={index} className="card">
+                <h3>{branch.insitution_name}</h3>
+                <h2>{branch.branch_name}</h2>
+                <h2>{branch.address}</h2>
+                <h2>{branch.city}</h2>
+                <h2>{branch.contact_number}</h2>
+                <h2>{branch.incharge}</h2>
+                <h2>{branch.pincodes}</h2>
+            </div>)}
             </div>
         </div> : pendingNotification.map((notification, index)=><div key={index} className="card">
             <h3>{notification.name}</h3>

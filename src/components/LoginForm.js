@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
 
-const LoginForm = ({isLoggedIn, setIsLoggedIn}) => {
+const LoginForm = ({isLoggedIn, setIsLoggedIn, userData, setUserData}) => {
   const USERNAME = "username";
 const PHONE = "phone";
 const PASSWORD = "password";
@@ -89,12 +89,15 @@ const NAME = "name";
       // formData.set(EMAIL, email.value);
       // formData.set(PASSWORD, password.value);
       // dispatch(login(data));
-      const res = await axios.post("http://127.0.0.1:3001/api/user/login", data)
+      console.log("process.env.REACT_APP_API_URL + ",process.env)
+      const res = await axios.post(process.env.REACT_APP_API_URL + "/api/user/login", data)
       console.log('reached');
       console.log(res);
       if(res.data.success){
         
         window.localStorage.setItem("token",res.data.token);
+        let d = {bid: res.data.bid, role:  res.data.role}
+        setUserData(d);
         setIsLoggedIn(true);
         //battery khatam phone meet mic is on
       } else{

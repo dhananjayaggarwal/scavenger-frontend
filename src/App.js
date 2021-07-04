@@ -13,15 +13,18 @@ import axios from 'axios';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({name: "", id: ""});
+  const [userData, setUserData] = useState({bid: "", role: ""});
   useEffect(()=>{
     console.log('maine toh nhi kiya login', isLoggedIn)
     const checkUserAuthenticated =  async function(){
       const authenticationToken = localStorage.getItem('token');
       if(authenticationToken){
       let config = { headers: {'Authorization': 'Bearer ' + authenticationToken}};
-       const result = await axios.get('http://127.0.0.1:3001/api/user/checkLogin', config)
+       const result = await axios.get(process.env.REACT_APP_API_URL+'/api/user/checkLogin', config)
        if(result){
+         let d = {bid: result.data.branchId, role:  result.data.role}
+        setUserData(d);
+        console.log("userData", userData);
          setIsLoggedIn(true)
          console.log('chal gaya')
        } else{
@@ -37,19 +40,19 @@ function App() {
 
   useEffect(() => {
     if(isLoggedIn){
-      console.log("socket wala chalra hai")
-      const SOCKET_URL = "http://127.0.0.1:3001";
+      console.log("socket wala chalra hai", userData)
+    const SOCKET_URL = process.env.REACT_APP_API_URL;
     const socket = socketClient(SOCKET_URL);
     socket.on('connection', () => {
     console.log(`I'm connected with the back-end`);
 
       // emit event from client-side
-      socket.emit("join", { "bid": "1", "role": "BRANCH" });
+      socket.emit("join", { "bid": userData.bid, "role": userData.role });
     });
 
     socket.on('notification', (data, notification_id) => {
 		console.log(data, notification_id); 
-		socket.emit("notification_received", { "bid": "1", "nid": notification_id });
+		socket.emit("notification_received", { "bid": userData.bid, "nid": notification_id });
 		})
     socket.on("connect_error", (err) => { console.log(`connect_error due to ${err.message}`); });
   } 
@@ -62,7 +65,7 @@ function App() {
     <div className="App">
       <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Route path="/" exact component = {() => <ContactForm isLoggedIn={isLoggedIn} />} />      
-      <Route path='/login' exact component={() => <LoginForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}  />
+      <Route path='/login' exact component={() => <LoginForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} userData={userData} setUserData={setUserData}/>}  />
     </div>
     </BrowserRouter>
   );
