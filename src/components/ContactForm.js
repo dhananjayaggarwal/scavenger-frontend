@@ -105,58 +105,68 @@ const ContactForm = () => {
     };
     return (
         <div className="contact-form">
-            <form onSubmit={submitContactForm}>
-                <div className="form-group">
-                    <label>Name: </label>
-                    <input
-                        className="form-input"
-                        name={NAME}
-                        value={name.value}
-                        onChange={handleChangeInput}
-                        onBlur={handleBlurInput}
-                    />
-                    {name.error && <small className="error-msg">{name.error}</small>}
+            <div className="row mt-2">
+                <div className="col-md-6 offset-md-3">
+                    <div className="card" >
+                        <div class="card-body">
+
+                            <form onSubmit={submitContactForm}>
+                                <div className="form-group mb-4">
+                                    <label>Name: </label>
+                                    <input
+                                        className="form-control"
+                                        name={NAME}
+                                        value={name.value}
+                                        onChange={handleChangeInput}
+                                        onBlur={handleBlurInput}
+                                    />
+                                    {name.error && <small className="error-msg">{name.error}</small>}
+                                </div>
+                                <div className="form-group mb-4">
+                                    <label>Email: </label>
+                                    <input
+                                        className="form-control"
+                                        name={EMAIL}
+                                        value={email.value}
+                                        onChange={handleChangeInput}
+                                        onBlur={handleBlurInput}
+                                    />
+                                    {email.error && <small className="error-msg">{email.error}</small>}
+                                </div>
+                                <div className="form-group mb-4">
+                                    <label>Phone: </label>
+                                    <input
+                                        className="form-control"
+                                        name={PHONE}
+                                        value={phone.value}
+                                        onChange={handleChangeInput}
+                                        onBlur={handleBlurInput}
+                                    />
+                                    {phone.error && (
+                                        <small className="error-msg">{phone.error}</small>
+                                    )}
+                                </div>
+                                <div className="form-group mb-4">
+                                    <label>Pincode: </label>
+                                    <input
+                                        className="form-control"
+                                        name={PINCODE}
+                                        value={pincode.value}
+                                        onChange={handleChangeInput}
+                                        onBlur={handleBlurInput}
+                                    />
+                                    {pincode.error && (
+                                        <small className="error-msg">{pincode.error}</small>
+                                    )}
+                                </div>
+                                <button className="btn btn-success bnt-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label>Email: </label>
-                    <input
-                        className="form-input"
-                        name={EMAIL}
-                        value={email.value}
-                        onChange={handleChangeInput}
-                        onBlur={handleBlurInput}
-                    />
-                    {email.error && <small className="error-msg">{email.error}</small>}
-                </div>
-                <div className="form-group">
-                    <label>Phone: </label>
-                    <input
-                        className="form-input"
-                        name={PHONE}
-                        value={phone.value}
-                        onChange={handleChangeInput}
-                        onBlur={handleBlurInput}
-                    />
-                    {phone.error && (
-                        <small className="error-msg">{phone.error}</small>
-                    )}
-                </div>
-                <div className="form-group">
-                    <label>Pincode: </label>
-                    <input
-                        className="form-input"
-                        name={PINCODE}
-                        value={pincode.value}
-                        onChange={handleChangeInput}
-                        onBlur={handleBlurInput}
-                    />
-                    {pincode.error && (
-                        <small className="error-msg">{pincode.error}</small>
-                    )}
-                </div>
-                <button className="btn bnt-primary">Submit</button>
-            </form>
+            </div>
         </div>
+
     );
 };
 

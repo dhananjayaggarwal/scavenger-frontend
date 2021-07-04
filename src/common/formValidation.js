@@ -27,7 +27,7 @@ export const validatePincode = (pincode) => {
         return "Pincode must contain numbers only";
      }
 
-    if (pincode.length != 6)
+    if (pincode.length !== 6)
       return "Pincode must be 6 numbers long";
     return false;
   };

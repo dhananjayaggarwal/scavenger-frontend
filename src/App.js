@@ -4,6 +4,7 @@ import { socket } from "./service/socket";
 import React, { useState, useEffect } from "react";
 
 import ContactForm from './components/ContactForm';
+import Header from './components/Header'
 function App() {
   useEffect(() => {
 
@@ -16,7 +17,10 @@ function App() {
 
 
 
-    socket.on('notification', (data, notification_id) => { console.log(data, notification_id); })
+    socket.on('notification', (data, notification_id) => {
+		console.log(data, notification_id); 
+		socket.emit("notification_received", { "bid": "1", "nid": notification_id });
+		})
 
 
     socket.on("connect_error", (err) => { console.log(`connect_error due to ${err.message}`); });
@@ -26,7 +30,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -39,8 +43,8 @@ function App() {
         >
           Learn React
         </a>
-      </header>
-
+      </header> */}
+      <Header></Header>
       <ContactForm></ContactForm>
     </div>
   );
