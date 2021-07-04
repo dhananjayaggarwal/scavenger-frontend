@@ -1,16 +1,21 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
-function Header(){
+function Header({isLoggedIn, setIsLoggedIn}){
+    const removeToken = () =>{
+        localStorage.removeItem('token')
+        setIsLoggedIn(false)
+    }
+
     return (
 
-    <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Scavenger</a>
+    <nav className="navbar navbar-dark bg-dark">
+    <a className="navbar-brand" href="#">Scavenger</a>
     
-    <div class="" id="navbarNav">
-    <ul class="navbar-nav">
-        <li class="nav-item active">
-        <a class="nav-link" href="#">Login <span class="sr-only"></span></a>
-        </li>
+    <div className="" id="navbarNav">
+        
+    <ul className="navbar-nav">
+    {!isLoggedIn?<Link to='/login' >Login</Link> : <Link onClick={removeToken} >Logout</Link>}
     </ul>
     </div>
     </nav>

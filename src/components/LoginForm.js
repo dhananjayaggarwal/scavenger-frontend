@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { validateEmail, validatePassword } from "../common/formValidation";
-import { EMAIL, PASSWORD } from "../../constants";
+import { validateEmail, validatePassword, validateName } from "../common/formValidation";
+// import { EMAIL, PASSWORD } from "../../constants";
 import { useDispatch } from "react-redux";
-import { login } from "../../actions/index";
+// import { login } from "../../actions/index";
 import { useHistory } from "react-router-dom";
+import axios from 'axios';
 
-const LoginForm = () => {
+const LoginForm = ({isLoggedIn, setIsLoggedIn}) => {
+  const USERNAME = "username";
+const PHONE = "phone";
+const PASSWORD = "password";
+const PINCODE = "pincode";
+const NAME = "name";
   const [username, setUsername] = useState({
     value: "",
     error: false,
@@ -17,9 +23,12 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   let history = useHistory();
 
-  // useEffect(() => {
-  //   dispatch(isLoggedIn());
-  // }, [dispatch]);
+  useEffect(() => {
+    console.log('loginFOrm check',isLoggedIn)
+    if(isLoggedIn){
+      history.push('/');
+    }
+  }, [isLoggedIn]);
 
   const validateAllFields = () => {
     return !validateName(username.value) && !validatePassword(password.value);
@@ -55,7 +64,21 @@ const LoginForm = () => {
       // error_modal("wrong input");
     }
   };
-  const submitForm = (e) => {
+
+  /*
+  
+  {
+    "success": "true",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkJhZGxhcHVyIiwidXNlcklkIjoyLCJyb2xlIjoiQlJBTkNIIiwiYnJhbmNoSWQiOjEsImlhdCI6MTYyNTM5OTE0MiwiZXhwIjoxNjI1NDM1MTQyfQ.uylCu4L6Wj9-urY8jbsvq6LL0IKhG8YgrIX9Wt52-m8",
+    "expiresIn": "36000",
+    "userId": 2,
+    "role": "BRANCH",
+    "pendingNotifications": []
+}
+  
+  
+  */
+  const submitForm = async (e) => {
     e.preventDefault();
     if (validateAllFields()) {
       let data = {
@@ -65,7 +88,20 @@ const LoginForm = () => {
       // const formData = new FormData();
       // formData.set(EMAIL, email.value);
       // formData.set(PASSWORD, password.value);
-      dispatch(login(data));
+      // dispatch(login(data));
+      const res = await axios.post("http://127.0.0.1:3001/api/user/login", data)
+      console.log('reached');
+      console.log(res);
+      if(res.data.success){
+        
+        window.localStorage.setItem("token",res.data.token);
+        setIsLoggedIn(true);
+        //battery khatam phone meet mic is on
+      } else{
+        console.log('aree');
+        // show something went wrong
+      }
+      
       history.push("/");
     }
   };
@@ -81,7 +117,7 @@ const LoginForm = () => {
             onChange={handleChangeInput}
             onBlur={handleBlurInput}
           />
-          {email.error && <small className="error-msg">{email.error}</small>}
+          {username.error && <small className="error-msg">{username.error}</small>}
         </div>
         <div className="form-group">
           <label>Password: </label>
